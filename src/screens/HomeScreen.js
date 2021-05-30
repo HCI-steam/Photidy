@@ -8,55 +8,72 @@ import {
   View,
   Text,
   SafeAreaView,
+  FlatList,
+  Image,
+  Dimensions,
 } from 'react-native';
+// import {List, Thumbnail} from 'native-base'
+import * as MediaLibrary from 'expo-media-library';
 
-const HomeScreen = ({ navigation }) => {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+const screen = Dimensions.get('screen');
+const imageCountPerCol = 5;
+const imageGridSize = screen.width / imageCountPerCol;
+class HomeScreen extends React.Component {
+  state = {
+    photoLength: 0,
+    photos: [],
+  };
+
+  componentDidMount() {
+    this._mediaLibraryAsync();
+  }
+
+  _mediaLibraryAsync = async () => {
+    await MediaLibrary.requestPermissionsAsync();
+    let { status } = await MediaLibrary.getPermissionsAsync();
+    if (status === 'granted') {
+      let length = (await MediaLibrary.getAssetsAsync()).totalCount;
+      let media = await MediaLibrary.getAssetsAsync({
+        first: length,
+        sortBy: ['creationTime'],
+      });
+
+      this.setState({ photos: media.assets, photoLength: length });
+    }
+  };
+
+  render() {
+    const { photos, photoLength } = this.state;
+
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <FlatList
+          data={photos}
+          numColumns={imageCountPerCol}
+          getItemLayout={(data, index) => {
+            return {
+              length: imageGridSize,
+              offset: (imageGridSize + 1) * index,
+              index,
+            };
           }}
-        >
-          <Text
-            style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginBottom: 16,
-            }}
-          >
-            You are on Home Screen
-          </Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigation.navigate('SettingsStack', { screen: 'Settings' })
-            }
-          >
-            <Text>Go to settng Tab</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Details')}
-          >
-            <Text>Open Details Screen</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
+          initialScrollIndex={Math.floor(photoLength / imageCountPerCol)}
+          renderItem={({ item }) => (
+            <Image
+              style={{
+                width: imageGridSize,
+                height: imageGridSize,
+                margin: 0.5,
+                resizeMode: 'cover',
+              }}
+              source={{ uri: item.uri }}
+            />
+          )}
+        />
+      </SafeAreaView>
+    );
+  }
+}
 
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    width: 300,
-    marginTop: 16,
-  },
-});
+const styles = StyleSheet.create({});
 export default HomeScreen;

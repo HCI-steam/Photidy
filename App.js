@@ -1,27 +1,28 @@
 import React from 'react';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+  Feather,
+} from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import HomeScreen from './src/screens/HomeScreen';
-import DetailsScreen from './src/screens/DetailsScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
-import SettingsScreen from './src/screens/SettingsScreen';
+import {
+  HomeScreen,
+  DetailsScreen,
+  AlbumScreen,
+  SettingsScreen,
+  ProfileScreen,
+} from './src/screens';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeStack() {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      // screenOptions={{
-      //   headerStyle: { backgroundColor: '#42f44b' },
-      //   headerTintColor: '#fff',
-      //   headerTitleStyle: { fontWeight: 'bold' },
-      // }}
-    >
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -38,14 +39,7 @@ function HomeStack() {
 
 function SettingsStack() {
   return (
-    <Stack.Navigator
-      initialRouteName="Settings"
-      // screenOptions={{
-      //   headerStyle: { backgroundColor: '#42f44b' },
-      //   headerTintColor: '#fff',
-      //   headerTitleStyle: { fontWeight: 'bold' },
-      // }}
-    >
+    <Stack.Navigator initialRouteName="Settings">
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
@@ -65,6 +59,18 @@ function SettingsStack() {
   );
 }
 
+function AlbumStack() {
+  return (
+    <Stack.Navigator initialRouteName="Album">
+      <Stack.Screen
+        name="Album"
+        component={AlbumScreen}
+        options={{ title: '' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function App() {
   return (
     <NavigationContainer>
@@ -78,9 +84,19 @@ function App() {
           name="HomeStack"
           component={HomeStack}
           options={{
-            tabBarLabel: 'Home',
+            tabBarLabel: '보관함',
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
+              <MaterialIcons name="photo-library" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="AlbumStack"
+          component={AlbumStack}
+          options={{
+            tabBarLabel: '앨범',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="ios-albums" color={color} size={size} />
             ),
           }}
         />
@@ -88,13 +104,9 @@ function App() {
           name="SettingsStack"
           component={SettingsStack}
           options={{
-            tabBarLabel: 'Settings',
+            tabBarLabel: '더보기',
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="settings-helper"
-                color={color}
-                size={size}
-              />
+              <Feather name="more-horizontal" color={color} size={size} />
             ),
           }}
         />
