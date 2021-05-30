@@ -57,7 +57,7 @@ class HomeScreen extends React.PureComponent {
             };
           }}
           //   keyExtractor={(item, index) => item.id}
-          initialScrollIndex={Math.floor(photoLength / imageCountPerCol)}
+          initialScrollIndex={Math.floor(photoLength / imageCountPerCol) - 1}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => navigation.navigate('Details', { item })}
