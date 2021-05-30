@@ -5,8 +5,6 @@ import * as React from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
-  View,
-  Text,
   SafeAreaView,
   FlatList,
   Image,
@@ -44,6 +42,7 @@ class HomeScreen extends React.Component {
 
   render() {
     const { photos, photoLength } = this.state;
+    const { navigation } = this.props;
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -59,15 +58,19 @@ class HomeScreen extends React.Component {
           }}
           initialScrollIndex={Math.floor(photoLength / imageCountPerCol)}
           renderItem={({ item }) => (
-            <Image
-              style={{
-                width: imageGridSize,
-                height: imageGridSize,
-                margin: 0.5,
-                resizeMode: 'cover',
-              }}
-              source={{ uri: item.uri }}
-            />
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Details', { item })}
+            >
+              <Image
+                style={{
+                  width: imageGridSize,
+                  height: imageGridSize,
+                  margin: 0.5,
+                  resizeMode: 'cover',
+                }}
+                source={{ uri: item.uri }}
+              />
+            </TouchableOpacity>
           )}
         />
       </SafeAreaView>
