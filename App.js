@@ -46,11 +46,6 @@ function SettingsStack() {
         options={{ title: '' }}
       />
       <Stack.Screen
-        name="Details"
-        component={DetailsScreen}
-        options={{ title: '' }}
-      />
-      <Stack.Screen
         name="Profile"
         component={ProfileScreen}
         options={{ title: '' }}
@@ -75,7 +70,7 @@ function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Feed"
+        initialRouteName="BottomTab"
         // tabBarOptions={{
         //   activeTintColor: '#42f44b',
         // }}

@@ -16,7 +16,7 @@ import * as MediaLibrary from 'expo-media-library';
 const screen = Dimensions.get('screen');
 const imageCountPerCol = 5;
 const imageGridSize = screen.width / imageCountPerCol;
-class HomeScreen extends React.Component {
+class HomeScreen extends React.PureComponent {
   state = {
     photoLength: 0,
     photos: [],
@@ -56,6 +56,7 @@ class HomeScreen extends React.Component {
               index,
             };
           }}
+          //   keyExtractor={(item, index) => item.id}
           initialScrollIndex={Math.floor(photoLength / imageCountPerCol)}
           renderItem={({ item }) => (
             <TouchableOpacity

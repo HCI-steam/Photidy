@@ -38,12 +38,6 @@ const SettingsScreen = ({ route, navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Details')}
-          >
-            <Text>Open Detail Screen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
             onPress={() => navigation.navigate('Profile')}
           >
             <Text>Open Profile Screen</Text>
