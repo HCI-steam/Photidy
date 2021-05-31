@@ -10,11 +10,10 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-// import {List, Thumbnail} from 'native-base'
 import * as MediaLibrary from 'expo-media-library';
 
 const screen = Dimensions.get('screen');
-const imageCountPerCol = 5;
+const imageCountPerCol = 4;
 const imageGridSize = screen.width / imageCountPerCol;
 class HomeScreen extends React.PureComponent {
   state = {
@@ -23,17 +22,17 @@ class HomeScreen extends React.PureComponent {
   };
 
   componentDidMount() {
-    this._mediaLibraryAsync();
+    this._getAllAssetsAsync();
   }
 
-  _mediaLibraryAsync = async () => {
+  _getAllAssetsAsync = async () => {
     await MediaLibrary.requestPermissionsAsync();
     let { status } = await MediaLibrary.getPermissionsAsync();
     if (status === 'granted') {
       let length = (await MediaLibrary.getAssetsAsync()).totalCount;
       let media = await MediaLibrary.getAssetsAsync({
         first: length,
-        sortBy: ['creationTime'],
+        sortBy: [['creationTime', true]],
       });
 
       this.setState({ photos: media.assets, photoLength: length });
@@ -60,7 +59,7 @@ class HomeScreen extends React.PureComponent {
           initialScrollIndex={Math.floor(photoLength / imageCountPerCol) - 1}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('Details', { item })}
+              onPress={() => navigation.navigate('PhotoView', { item })}
             >
               <Image
                 style={{

@@ -7,7 +7,7 @@ import * as MediaLibrary from 'expo-media-library';
 
 const screen = Dimensions.get('screen');
 
-class DetailsScreen extends React.PureComponent {
+class PhotoViewScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { image: props.route.params.item };
@@ -20,7 +20,6 @@ class DetailsScreen extends React.PureComponent {
   _extendAssetInfo = async () => {
     const { image } = this.state;
     let extended = await MediaLibrary.getAssetInfoAsync(image.id);
-    console.log(extended);
     this.setState({ image: extended });
   };
 
@@ -47,4 +46,4 @@ class DetailsScreen extends React.PureComponent {
     );
   }
 }
-export default DetailsScreen;
+export default PhotoViewScreen;

@@ -11,11 +11,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {
   HomeScreen,
-  DetailsScreen,
+  PhotoViewScreen,
+  AlbumsScreen,
   AlbumScreen,
   SettingsScreen,
   ProfileScreen,
 } from './src/screens';
+
+import { MainTopLeftMenu, MainTopRightMenu } from './src/components';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,11 +29,15 @@ function HomeStack() {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: '' }}
+        options={{
+          title: '보관함',
+          headerLeft: props => <MainTopLeftMenu {...props} />,
+          headerRight: props => <MainTopRightMenu {...props} />,
+        }}
       />
       <Stack.Screen
-        name="Details"
-        component={DetailsScreen}
+        name="PhotoView"
+        component={PhotoViewScreen}
         options={{ title: '' }}
       />
     </Stack.Navigator>
@@ -43,7 +50,7 @@ function SettingsStack() {
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ title: '' }}
+        options={{ title: '설정' }}
       />
       <Stack.Screen
         name="Profile"
@@ -56,7 +63,12 @@ function SettingsStack() {
 
 function AlbumStack() {
   return (
-    <Stack.Navigator initialRouteName="Album">
+    <Stack.Navigator initialRouteName="Albums">
+      <Stack.Screen
+        name="Albums"
+        component={AlbumsScreen}
+        options={{ title: '앨범' }}
+      />
       <Stack.Screen
         name="Album"
         component={AlbumScreen}
@@ -99,9 +111,9 @@ function App() {
           name="SettingsStack"
           component={SettingsStack}
           options={{
-            tabBarLabel: '더보기',
+            tabBarLabel: '설정',
             tabBarIcon: ({ color, size }) => (
-              <Feather name="more-horizontal" color={color} size={size} />
+              <MaterialIcons name="settings" color={color} size={size} />
             ),
           }}
         />
