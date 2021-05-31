@@ -85,6 +85,10 @@ function App() {
         initialRouteName="BottomTab"
         // tabBarOptions={{
         //   activeTintColor: '#42f44b',
+        //   style: {
+        //     backgroundColor: 'rgba(255,255,255, 0.85)',
+        //     position: 'absolute',
+        //   },
         // }}
       >
         <Tab.Screen

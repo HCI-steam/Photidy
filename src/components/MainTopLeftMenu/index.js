@@ -2,10 +2,10 @@ import * as React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-const currentLayout = 4;
+const currentLayout = 5;
 
 const MainTopLeftMenu = props => {
-  console.log(props);
+  //   console.log(props);
   return (
     <TouchableOpacity
       style={styles.container}

@@ -4,6 +4,7 @@
 import * as React from 'react';
 import { View, SafeAreaView, Image, Dimensions } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
 
 const screen = Dimensions.get('screen');
 
@@ -20,6 +21,10 @@ class PhotoViewScreen extends React.PureComponent {
   _extendAssetInfo = async () => {
     const { image } = this.state;
     let extended = await MediaLibrary.getAssetInfoAsync(image.id);
+    let { exists, size } = await FileSystem.getInfoAsync(extended.localUri);
+
+    if (exists) extended = { ...extended, size };
+
     this.setState({ image: extended });
   };
 

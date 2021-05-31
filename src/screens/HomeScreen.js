@@ -12,8 +12,10 @@ import {
 } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 
+// import { SortAndFilterModal } from '../components';
+
 const screen = Dimensions.get('screen');
-const imageCountPerCol = 4;
+const imageCountPerCol = 5;
 const imageGridSize = screen.width / imageCountPerCol;
 class HomeScreen extends React.PureComponent {
   state = {
@@ -55,7 +57,7 @@ class HomeScreen extends React.PureComponent {
               index,
             };
           }}
-          //   keyExtractor={(item, index) => item.id}
+          keyExtractor={(item, index) => item.id + index}
           initialScrollIndex={Math.floor(photoLength / imageCountPerCol) - 1}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -65,7 +67,8 @@ class HomeScreen extends React.PureComponent {
                 style={{
                   width: imageGridSize,
                   height: imageGridSize,
-                  margin: 0.5,
+                  marginRight: 1,
+                  marginTop: 1,
                   resizeMode: 'cover',
                 }}
                 source={{ uri: item.uri }}
