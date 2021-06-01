@@ -2,7 +2,7 @@ import { all, call, put, take, fork } from 'redux-saga/effects';
 import { actions, types } from '../states/permissionsState';
 import { callApiPermissions } from '../api';
 
-export function* fetchPermissions(action) {
+export function* fetchMediaLibraryPermission(action) {
   console.log(action);
   while (true) {
     yield take(types.REQUEST_MEDIA_LIBRARY_PERMISSION);
@@ -12,5 +12,5 @@ export function* fetchPermissions(action) {
 }
 
 export function* watchFetchingPermissions() {
-  yield all([fork(fetchPermissions)]);
+  yield all([fork(fetchMediaLibraryPermission)]);
 }
