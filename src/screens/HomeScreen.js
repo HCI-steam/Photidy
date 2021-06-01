@@ -14,23 +14,25 @@ import {
   getAllAssets,
   getAssetsLength,
   getAssetsLoading,
+  getImageCountPerRow,
 } from '../redux/selectors';
 import { actions } from '../redux/states/assetsState';
 
 const screen = Dimensions.get('screen');
-const imageCountPerCol = 5;
-const imageGridSize = screen.width / imageCountPerCol;
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [assets, assetsLength, isLoading] = useSelector(
+  const [assets, assetsLength, isLoading, imageCountPerRow] = useSelector(
     state => [
       getAllAssets(state),
       getAssetsLength(state),
       getAssetsLoading(state),
+      getImageCountPerRow(state),
     ],
     shallowEqual
   );
+
+  const imageGridSize = screen.width / imageCountPerRow;
 
   console.log('in homescreen : ', assetsLength);
 
@@ -42,8 +44,9 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading ? null : (
         <FlatList
+          key={'assetsList_' + imageCountPerRow}
           data={assets}
-          numColumns={imageCountPerCol}
+          numColumns={imageCountPerRow}
           getItemLayout={(data, index) => {
             return {
               length: imageGridSize,
@@ -52,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
             };
           }}
           keyExtractor={(item, index) => item.id + index}
-          initialScrollIndex={Math.floor(assetsLength / imageCountPerCol) - 1}
+          initialScrollIndex={Math.floor(assetsLength / imageCountPerRow) - 1}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => navigation.navigate('PhotoView', { item })}

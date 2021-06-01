@@ -1,20 +1,31 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-const currentLayout = 5;
+import { actions } from '../../redux/states/assetsState';
+import { getImageCountPerRow } from '../../redux/selectors';
 
 const MainTopLeftMenu = props => {
   //   console.log(props);
+  const dispatch = useDispatch();
+
+  const [imageCountPerRow] = useSelector(
+    state => [getImageCountPerRow(state)],
+    shallowEqual
+  );
+
+  const handleUpdateImageCountPerRow = useCallback(() => {
+    dispatch(actions.updateImageCountPerRow());
+  }, [dispatch]);
+
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => {
-        console.log('pressed');
-      }}
+      onPress={handleUpdateImageCountPerRow}
     >
       <MaterialCommunityIcons
-        name={`numeric-${currentLayout}-box-multiple-outline`}
+        name={`numeric-${imageCountPerRow}-box-multiple-outline`}
         style={styles.icon}
       />
     </TouchableOpacity>
