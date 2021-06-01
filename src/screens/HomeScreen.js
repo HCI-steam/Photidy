@@ -1,7 +1,4 @@
-// React Native Bottom Navigation
-// https://aboutreact.com/react-native-bottom-navigation/
-
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -10,45 +7,42 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 // import { SortAndFilterModal } from '../components';
+import {
+  getAllAssets,
+  getAssetsLength,
+  getAssetsLoading,
+} from '../redux/selectors';
+import { actions } from '../redux/states/assetsState';
 
 const screen = Dimensions.get('screen');
 const imageCountPerCol = 5;
 const imageGridSize = screen.width / imageCountPerCol;
-class HomeScreen extends React.PureComponent {
-  state = {
-    photoLength: 0,
-    photos: [],
-  };
 
-  componentDidMount() {
-    this._getAllAssetsAsync();
-  }
+const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const [assets, assetsLength, isLoading] = useSelector(
+    state => [
+      getAllAssets(state),
+      getAssetsLength(state),
+      getAssetsLoading(state),
+    ],
+    shallowEqual
+  );
 
-  _getAllAssetsAsync = async () => {
-    await MediaLibrary.requestPermissionsAsync();
-    let { status } = await MediaLibrary.getPermissionsAsync();
-    if (status === 'granted') {
-      let length = (await MediaLibrary.getAssetsAsync()).totalCount;
-      let media = await MediaLibrary.getAssetsAsync({
-        first: length,
-        sortBy: [['creationTime', true]],
-      });
+  console.log('in homescreen : ', assetsLength);
 
-      this.setState({ photos: media.assets, photoLength: length });
-    }
-  };
+  useEffect(() => {
+    dispatch(actions.requestAllAssets());
+  }, [dispatch]);
 
-  render() {
-    const { photos, photoLength } = this.state;
-    const { navigation } = this.props;
-
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      {isLoading ? null : (
         <FlatList
-          data={photos}
+          data={assets}
           numColumns={imageCountPerCol}
           getItemLayout={(data, index) => {
             return {
@@ -58,7 +52,7 @@ class HomeScreen extends React.PureComponent {
             };
           }}
           keyExtractor={(item, index) => item.id + index}
-          initialScrollIndex={Math.floor(photoLength / imageCountPerCol) - 1}
+          initialScrollIndex={Math.floor(assetsLength / imageCountPerCol) - 1}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => navigation.navigate('PhotoView', { item })}
@@ -76,10 +70,10 @@ class HomeScreen extends React.PureComponent {
             </TouchableOpacity>
           )}
         />
-      </SafeAreaView>
-    );
-  }
-}
+      )}
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({});
 export default HomeScreen;

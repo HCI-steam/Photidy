@@ -1,6 +1,3 @@
-// React Native Bottom Navigation
-// https://aboutreact.com/react-native-bottom-navigation/
-
 import * as React from 'react';
 import { View, SafeAreaView, Image, Dimensions } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
@@ -11,6 +8,7 @@ const screen = Dimensions.get('screen');
 class PhotoViewScreen extends React.PureComponent {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = { image: props.route.params.item };
   }
 

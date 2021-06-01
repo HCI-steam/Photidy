@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   MaterialCommunityIcons,
   MaterialIcons,
@@ -8,6 +8,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Provider, useDispatch } from 'react-redux';
 
 import {
   HomeScreen,
@@ -17,8 +18,9 @@ import {
   SettingsScreen,
   ProfileScreen,
 } from './src/screens';
-
 import { MainTopLeftMenu, MainTopRightMenu } from './src/components';
+import store from './src/redux';
+import { actions } from './src/redux/states/permissionsState';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -78,7 +80,21 @@ function AlbumStack() {
   );
 }
 
+function AppWrapper() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
+
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(actions.requestMediaLibraryPermission());
+  }, [dispatch]);
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -126,4 +142,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppWrapper;

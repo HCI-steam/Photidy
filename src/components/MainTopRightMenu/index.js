@@ -2,10 +2,7 @@ import * as React from 'react';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-const currentLayout = 5;
-
 const MainTopRightMenu = props => {
-  //   console.log(props);
   return (
     <View style={styles.container}>
       <TouchableOpacity
