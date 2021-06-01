@@ -34,8 +34,6 @@ const HomeScreen = ({ navigation }) => {
 
   const imageGridSize = screen.width / imageCountPerRow;
 
-  console.log('in homescreen : ', assetsLength);
-
   useEffect(() => {
     dispatch(actions.requestAllAssets());
   }, [dispatch]);

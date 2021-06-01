@@ -1,7 +1,4 @@
-// React Native Bottom Navigation
-// https://aboutreact.com/react-native-bottom-navigation/
-
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -9,42 +6,36 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
-class AlbumsScreen extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = { albums: [] };
-  }
+import { getAllAlbums, getAlbumsLoading } from '../redux/selectors';
+import { actions } from '../redux/states/albumsState';
 
-  componentDidMount() {
-    this._getAlbumsAsync();
-  }
+const AlbumsScreen = () => {
+  const dispatch = useDispatch();
+  const [albums, isLoading] = useSelector(
+    state => [getAllAlbums(state), getAlbumsLoading(state)],
+    shallowEqual
+  );
 
-  _getAlbumsAsync = async () => {
-    let { status } = await MediaLibrary.getPermissionsAsync();
-    if (status === 'granted') {
-      let albums = await MediaLibrary.getAlbumsAsync();
+  console.log(albums);
 
-      let result = await Promise.all(
-        albums.map(async album => {
-          let media = await MediaLibrary.getAssetsAsync(album.id, {
-            first: 1,
-          });
-          return { ...album, thumbnail: media.assets[0] };
-        })
-      );
+  useEffect(() => {
+    dispatch(actions.requestAllAlbums());
+  }, [dispatch]);
 
-      this.setState({ albums: result });
-    }
-  };
-
-  render() {
-    // console.log('render : ', this.state.albums);
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      {isLoading ? null : (
         <View style={{ flex: 1, padding: 16 }}>
-          <View
+          {albums.map(album => {
+            return (
+              <Text
+                key={album.id}
+              >{`${album.title}  ${album.assetCount}`}</Text>
+            );
+          })}
+          {/* <View
             style={{
               flex: 1,
               alignItems: 'center',
@@ -60,12 +51,12 @@ class AlbumsScreen extends React.PureComponent {
             >
               You are on Albums Screen
             </Text>
-          </View>
+          </View> */}
         </View>
-      </SafeAreaView>
-    );
-  }
-}
+      )}
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   button: {
