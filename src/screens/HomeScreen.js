@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useScrollToTop } from '@react-navigation/native';
 
 // import { SortAndFilterModal } from '../components';
 import {
@@ -31,6 +32,15 @@ const HomeScreen = ({ navigation }) => {
     ],
     shallowEqual
   );
+  const scrollRef = useRef(null);
+
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => {
+        scrollRef.current.scrollToEnd();
+      },
+    })
+  );
 
   const imageGridSize = screen.width / imageCountPerRow;
 
@@ -44,6 +54,7 @@ const HomeScreen = ({ navigation }) => {
         <FlatList
           key={'assetsList_' + imageCountPerRow}
           data={assets}
+          ref={scrollRef}
           numColumns={imageCountPerRow}
           getItemLayout={(data, index) => {
             return {

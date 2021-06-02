@@ -39,7 +39,7 @@ const assetsReducer = createReducer(initialState, {
   },
   [types.UPDATE_IMAGE_COUNT_PER_ROW]: (state, action) => {
     if (state.imageCountPerRow === 5) {
-      state.imageCountPerRow = 3;
+      state.imageCountPerRow = 1;
     } else {
       state.imageCountPerRow += 1;
     }
