@@ -30,9 +30,9 @@ const AlbumsScreen = () => {
         <View style={{ flex: 1, padding: 16 }}>
           {albums.map(album => {
             return (
-              <Text
-                key={album.id}
-              >{`${album.title}  ${album.assetCount}`}</Text>
+              <Text key={album.id}>{`${album.title}  ${album.assetCount} ${
+                album.thumbnail ? 'have' : 'no'
+              }`}</Text>
             );
           })}
           {/* <View
