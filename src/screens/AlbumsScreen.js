@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
   SafeAreaView,
+  AppState,
 } from 'react-native';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
@@ -18,42 +19,35 @@ const AlbumsScreen = () => {
     shallowEqual
   );
 
-  console.log(albums);
-
+  const appState = useRef(AppState.currentState);
   useEffect(() => {
-    dispatch(actions.requestAllAlbums());
-  }, [dispatch]);
+    AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
+
+  const handleAppStateChange = nextAppState => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      dispatch(actions.requestAllAlbums());
+    }
+    appState.current = nextAppState;
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {isLoading ? null : (
-        <View style={{ flex: 1, padding: 16 }}>
-          {albums.map(album => {
-            return (
-              <Text key={album.id}>{`${album.title}  ${album.assetCount} ${
-                album.thumbnail ? 'have' : 'no'
-              }`}</Text>
-            );
-          })}
-          {/* <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: 'center',
-                marginBottom: 16,
-              }}
-            >
-              You are on Albums Screen
-            </Text>
-          </View> */}
-        </View>
-      )}
+      <View style={{ flex: 1, padding: 16 }}>
+        {albums.map(album => {
+          return (
+            <Text key={album.id}>{`${album.title}  ${album.assetCount} ${
+              album.thumbnail ? 'have' : 'no'
+            }`}</Text>
+          );
+        })}
+      </View>
     </SafeAreaView>
   );
 };

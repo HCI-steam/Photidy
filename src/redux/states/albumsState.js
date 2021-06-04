@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { createReducer } from '../common';
 
 export const types = {
@@ -28,7 +30,7 @@ const initialState = {
 
 const albumsReducer = createReducer(initialState, {
   [types.GET_ALL_ALBUMS]: (state, action) => {
-    state.albums = action.albums;
+    if (!_.isEqual(state.albums, action.albums)) state.albums = action.albums;
   },
   [types.SET_LOADING_ALBUMS]: (state, action) =>
     (state.isLoading = action.isLoading),

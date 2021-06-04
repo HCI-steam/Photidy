@@ -8,7 +8,7 @@ const screen = Dimensions.get('screen');
 class PhotoViewScreen extends React.PureComponent {
   constructor(props) {
     super(props);
-    console.log(props);
+    // console.log(props);
     this.state = { image: props.route.params.item };
   }
 

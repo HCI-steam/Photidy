@@ -1,3 +1,5 @@
+import _ from 'loadsh';
+
 import { createReducer, mergeReducers } from '../common';
 
 export const types = {
@@ -34,8 +36,10 @@ const initialState = {
 
 const assetsReducer = createReducer(initialState, {
   [types.GET_ALL_ASSETS]: (state, action) => {
-    state.assets = action.assets;
-    state.assetsLength = action.assetsLength;
+    if (!_.isEqual(state.assets, action.assets)) {
+      state.assets = action.assets;
+      state.assetsLength = action.assetsLength;
+    }
   },
   [types.UPDATE_IMAGE_COUNT_PER_ROW]: (state, action) => {
     if (state.imageCountPerRow === 5) {

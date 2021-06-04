@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  Ionicons,
-  Feather,
-} from '@expo/vector-icons';
+import React, { useEffect, useRef, useCallback } from 'react';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 import {
   HomeScreen,
@@ -20,7 +17,11 @@ import {
 } from './src/screens';
 import { MainTopLeftMenu, MainTopRightMenu } from './src/components';
 import store from './src/redux';
-import { actions } from './src/redux/states/permissionsState';
+import { actions as permissionActions } from './src/redux/states/permissionsState';
+import { actions as appActions } from './src/redux/states/appState';
+import { actions as assetsActions } from './src/redux/states/assetsState';
+import { actions as albumsActions } from './src/redux/states/albumsState';
+import { getAppIsLoaded } from './src/redux/selectors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,6 +84,7 @@ function AlbumStack() {
 function AppWrapper() {
   return (
     <Provider store={store}>
+      <StatusBar style="auto" />
       <App />
     </Provider>
   );
@@ -90,9 +92,16 @@ function AppWrapper() {
 
 function App() {
   const dispatch = useDispatch();
+  const appIsLoaded = useSelector(state => getAppIsLoaded(state));
+  console.log(appIsLoaded);
 
   useEffect(() => {
-    dispatch(actions.requestMediaLibraryPermission());
+    if (!appIsLoaded) {
+      dispatch(permissionActions.requestMediaLibraryPermission());
+      dispatch(assetsActions.requestAllAssets());
+      dispatch(albumsActions.requestAllAlbums());
+    }
+    dispatch(appActions.setAppIsLoaded(true));
   }, [dispatch]);
 
   return (

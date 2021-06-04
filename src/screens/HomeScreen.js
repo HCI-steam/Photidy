@@ -1,90 +1,36 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  Image,
-  Dimensions,
-} from 'react-native';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useScrollToTop } from '@react-navigation/native';
+import React, { useEffect, useRef, useCallback } from 'react';
+import { StyleSheet, AppState } from 'react-native';
+import { useDispatch } from 'react-redux';
 
-// import { SortAndFilterModal } from '../components';
-import {
-  getAllAssets,
-  getAssetsLength,
-  getAssetsLoading,
-  getImageCountPerRow,
-} from '../redux/selectors';
 import { actions } from '../redux/states/assetsState';
-
-const screen = Dimensions.get('screen');
+import { ImageGridList } from '../components';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [assets, assetsLength, isLoading, imageCountPerRow] = useSelector(
-    state => [
-      getAllAssets(state),
-      getAssetsLength(state),
-      getAssetsLoading(state),
-      getImageCountPerRow(state),
-    ],
-    shallowEqual
-  );
-  const scrollRef = useRef(null);
 
-  useScrollToTop(
-    useRef({
-      scrollToTop: () => {
-        scrollRef.current.scrollToEnd();
-      },
-    })
-  );
-
-  const imageGridSize = screen.width / imageCountPerRow;
-
+  const appState = useRef(AppState.currentState);
   useEffect(() => {
-    dispatch(actions.requestAllAssets());
-  }, [dispatch]);
+    AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {isLoading ? null : (
-        <FlatList
-          key={'assetsList_' + imageCountPerRow}
-          data={assets}
-          ref={scrollRef}
-          numColumns={imageCountPerRow}
-          getItemLayout={(data, index) => {
-            return {
-              length: imageGridSize,
-              offset: (imageGridSize + 1) * index,
-              index,
-            };
-          }}
-          keyExtractor={(item, index) => item.id + index}
-          initialScrollIndex={Math.floor(assetsLength / imageCountPerRow) - 1}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('PhotoView', { item })}
-            >
-              <Image
-                style={{
-                  width: imageGridSize,
-                  height: imageGridSize,
-                  marginRight: 1,
-                  marginTop: 1,
-                  resizeMode: 'cover',
-                }}
-                source={{ uri: item.uri }}
-              />
-            </TouchableOpacity>
-          )}
-        />
-      )}
-    </SafeAreaView>
+  const handleAppStateChange = useCallback(
+    nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        dispatch(actions.requestAllAssets());
+      }
+      console.log(appState.current);
+      appState.current = nextAppState;
+    },
+    [dispatch, appState.current]
   );
+
+  return <ImageGridList navigation={navigation} />;
 };
 
 const styles = StyleSheet.create({});

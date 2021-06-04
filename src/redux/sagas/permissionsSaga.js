@@ -3,7 +3,7 @@ import { actions, types } from '../states/permissionsState';
 import { callApiPermissions } from '../api';
 
 export function* fetchMediaLibraryPermission(action) {
-  console.log(action);
+  // console.log(action);
   while (true) {
     yield take(types.REQUEST_MEDIA_LIBRARY_PERMISSION);
     const permission = yield call(callApiPermissions);
