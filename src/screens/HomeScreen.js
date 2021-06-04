@@ -3,7 +3,8 @@ import { StyleSheet, AppState } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { actions } from '../redux/states/assetsState';
-import { ImageGridList } from '../components';
+import { ImageGridList, SortAndFilterModal } from '../components';
+import { SafeAreaView } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -30,7 +31,12 @@ const HomeScreen = ({ navigation }) => {
     [dispatch, appState.current]
   );
 
-  return <ImageGridList navigation={navigation} />;
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ImageGridList navigation={navigation} />
+      <SortAndFilterModal />
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({});

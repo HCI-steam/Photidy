@@ -1,17 +1,23 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+
+import { actions } from '../../redux/states/assetsState';
 
 const MainTopRightMenu = props => {
+  const dispatch = useDispatch();
+
+  const handleOpenSFModal = useCallback(() => {
+    dispatch(actions.setSFModalVisible(true));
+    console.log('modal open');
+  }, [dispatch]);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          console.log('pressed');
-        }}
-      >
-        <Ionicons name="ios-filter" style={styles.icon} />
-        {/* <MaterialCommunityIcons name="filter-menu" style={styles.icon} /> */}
+      <TouchableOpacity onPress={handleOpenSFModal}>
+        {/* <Ionicons name="ios-filter" style={styles.icon} /> */}
+        <MaterialCommunityIcons name="filter-menu" style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {

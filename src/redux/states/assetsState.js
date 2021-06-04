@@ -7,6 +7,7 @@ export const types = {
   GET_ALL_ASSETS: 'assets/GET_ALL_ASSETS',
   UPDATE_IMAGE_COUNT_PER_ROW: 'assets/UPDATE_IMAGE_COUNT_PER_ROW',
   SET_LOADING_ASSETS: 'assets/SET_LOADING_ASSETS',
+  SET_SF_MODAL_VISIBLE: 'assets/SET_SF_MODAL_VISIBLE',
 };
 
 export const actions = {
@@ -25,6 +26,10 @@ export const actions = {
     type: types.SET_LOADING_ASSETS,
     isLoading,
   }),
+  setSFModalVisible: isSFModalVisible => ({
+    type: types.SET_SF_MODAL_VISIBLE,
+    isSFModalVisible,
+  }),
 };
 
 const initialState = {
@@ -32,6 +37,7 @@ const initialState = {
   assetsLength: 0,
   imageCountPerRow: 3,
   isLoading: false,
+  isSFModalVisible: false,
 };
 
 const assetsReducer = createReducer(initialState, {
@@ -50,6 +56,8 @@ const assetsReducer = createReducer(initialState, {
   },
   [types.SET_LOADING_ASSETS]: (state, action) =>
     (state.isLoading = action.isLoading),
+  [types.SET_SF_MODAL_VISIBLE]: (state, action) =>
+    (state.isSFModalVisible = action.isSFModalVisible),
 });
 
 export default assetsReducer;

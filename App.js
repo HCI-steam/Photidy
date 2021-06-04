@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  HeaderStyleInterpolators,
+} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { AppState } from 'react-native';
+import { AppState, Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import {
@@ -21,19 +24,24 @@ import { actions as permissionActions } from './src/redux/states/permissionsStat
 import { actions as appActions } from './src/redux/states/appState';
 import { actions as assetsActions } from './src/redux/states/assetsState';
 import { actions as albumsActions } from './src/redux/states/albumsState';
-import { getAppIsLoaded } from './src/redux/selectors';
+import { getAppIsLoaded, getSFModalVisible } from './src/redux/selectors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeStack() {
+  const modalVisible = useSelector(state => getSFModalVisible(state));
+
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName="Home" headerMode="float">
       <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{
+          headerShown: !modalVisible,
+          headerStyleInterpolator: HeaderStyleInterpolators.forFade,
           title: '보관함',
+          headerTitleAlign: 'center',
           headerLeft: props => <MainTopLeftMenu {...props} />,
           headerRight: props => <MainTopRightMenu {...props} />,
         }}

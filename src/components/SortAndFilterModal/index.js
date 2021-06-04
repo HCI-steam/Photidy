@@ -1,60 +1,55 @@
-import * as React from 'react';
-import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
+import React, { useCallback, useMemo, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetBackdrop,
+} from '@gorhom/bottom-sheet';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { getSFModalVisible } from '../../redux/selectors';
+import { actions } from '../../redux/states/assetsState';
+import SortAndFilterModalContent from '../SortAndFilterModalContent';
 
 const SortAndFilterModal = props => {
-  const [modalVisible, setModalVisible] = React.useState(props.visible);
+  const dispatch = useDispatch();
+  const modalVisible = useSelector(state => getSFModalVisible(state));
+
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = useMemo(() => ['25%', '50%', '75%', '90%'], []);
+
+  useEffect(() => {
+    if (modalVisible) {
+      bottomSheetModalRef.current?.present();
+    } else {
+      bottomSheetModalRef.current?.close();
+    }
+  }, [bottomSheetModalRef.current]);
+
+  const handleSheetChanges = useCallback(
+    index => {
+      console.log('handleSheetChanges', index);
+      if (index === -1) {
+        dispatch(actions.setSFModalVisible(false));
+      }
+    },
+    [dispatch]
+  );
 
   return (
-    <View style={styles.container}>
-      <Modal
-        animationType="slide"
-        visible={modalVisible}
-        presentationStyle="formSheet"
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
+    <BottomSheetModalProvider>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        backdropComponent={BottomSheetBackdrop}
+        handleComponent={null}
       >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={styles.button}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </View>
+        <SortAndFilterModalContent />
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 10,
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    // alignItems: 'center',
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    alignItems: 'center',
-    elevation: 3,
-  },
-  button: {
-    backgroundColor: 'brown',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 5,
-  },
-});
 
 export default SortAndFilterModal;
