@@ -12,6 +12,7 @@ import {
 } from '../../redux/selectors';
 import ImageListItem from '../ImageListItem';
 import ListFooterComponent from '../ListFooterComponent';
+import ListEmptyComponent from '../ListEmptyComponent';
 
 const ImageGridList = ({ navigation }) => {
   const [assets, assetsLength, isLoading, imageCountPerRow, appIsLoaded] =
@@ -47,9 +48,10 @@ const ImageGridList = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {/* TODO: Filtering 기능 구현 뒤에 실제 결과없음에 대해 스크롤 관련 에러, 헤더 버튼 동작 처리하기 */}
       <FlatList
         key={'assetsList_' + imageCountPerRow}
-        data={assets}
+        data={[]}
         ref={scrollRef}
         numColumns={imageCountPerRow}
         getItemLayout={(data, index) => {
@@ -62,7 +64,8 @@ const ImageGridList = ({ navigation }) => {
         keyExtractor={(item, index) => item.id}
         initialScrollIndex={Math.floor(assetsLength / imageCountPerRow) - 1}
         renderItem={renderItem}
-        ListFooterComponent={<ListFooterComponent assets={assets} />}
+        ListFooterComponent={<ListFooterComponent assets={[]} />}
+        ListEmptyComponent={ListEmptyComponent}
       />
     </SafeAreaView>
   );
