@@ -11,6 +11,7 @@ import {
   getAppIsLoaded,
 } from '../../redux/selectors';
 import ImageListItem from '../ImageListItem';
+import ListFooterComponent from '../ListFooterComponent';
 
 const ImageGridList = ({ navigation }) => {
   const [assets, assetsLength, isLoading, imageCountPerRow, appIsLoaded] =
@@ -24,6 +25,7 @@ const ImageGridList = ({ navigation }) => {
       ],
       shallowEqual
     );
+
   const screen = Dimensions.get('screen');
   const imageGridSize = screen.width / imageCountPerRow;
   useEffect(() => {
@@ -60,6 +62,7 @@ const ImageGridList = ({ navigation }) => {
         keyExtractor={(item, index) => item.id}
         initialScrollIndex={Math.floor(assetsLength / imageCountPerRow) - 1}
         renderItem={renderItem}
+        ListFooterComponent={<ListFooterComponent assets={assets} />}
       />
     </SafeAreaView>
   );
