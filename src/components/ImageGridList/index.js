@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import { SafeAreaView, FlatList, Dimensions } from 'react-native';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import {
   getAllAssets,
@@ -13,6 +14,7 @@ import {
 import ImageListItem from '../ImageListItem';
 import ListFooterComponent from '../ListFooterComponent';
 import ListEmptyComponent from '../ListEmptyComponent';
+import PhotoPagerView from '../PhotoPagerView';
 
 const ImageGridList = ({ navigation }) => {
   const [assets, assetsLength, isLoading, imageCountPerRow, appIsLoaded] =
@@ -29,9 +31,6 @@ const ImageGridList = ({ navigation }) => {
 
   const screen = Dimensions.get('screen');
   const imageGridSize = screen.width / imageCountPerRow;
-  useEffect(() => {
-    console.log('rendered');
-  }, []);
 
   const scrollRef = useRef(null);
   useScrollToTop(
@@ -43,8 +42,36 @@ const ImageGridList = ({ navigation }) => {
   );
 
   const renderImageItem = props => <ImageListItem {...props} />;
-  const renderItem = ({ item }) =>
-    renderImageItem({ item, imageGridSize, navigation });
+  const renderItem = ({ item, index }) =>
+    renderImageItem({ items: assets, index, imageGridSize, navigation });
+
+  const memoizedRenderItem = useMemo(() => renderItem, [assets, imageGridSize]);
+
+  const imageUrls = assets.map((item, index) => {
+    const screenWidth = screen.width,
+      screenHeight = screen.height;
+    const imageWidth = item.width,
+      imageHeight = item.height;
+    const imageRatio = imageHeight / imageWidth;
+
+    let appliedWidth = screenWidth;
+    let appliedHeight = screenWidth * imageRatio;
+    if (appliedHeight > screenHeight) {
+      const statusBarHeight = getStatusBarHeight(true);
+      appliedHeight = screenHeight - (statusBarHeight * 3) / 2;
+      appliedWidth = appliedHeight / imageRatio;
+    }
+
+    return {
+      url: item.uri,
+      props: {
+        item,
+        index,
+      },
+      width: appliedWidth,
+      height: appliedHeight,
+    };
+  });
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -61,11 +88,15 @@ const ImageGridList = ({ navigation }) => {
             index,
           };
         }}
+        initialNumToRender={imageCountPerRow * (imageGridSize / screen.height)}
         keyExtractor={(item, index) => item.id}
         initialScrollIndex={Math.floor(assetsLength / imageCountPerRow) - 1}
-        renderItem={renderItem}
+        renderItem={memoizedRenderItem}
         ListFooterComponent={<ListFooterComponent assets={assets} />}
+        disableVirtualization={false}
+        // 가능하면 뷰 하단(하단탭 바로위)에 고정시키기. 지금도 나쁘지 않지만.
       />
+      <PhotoPagerView imageUrls={imageUrls} />
     </SafeAreaView>
   );
 };

@@ -8,6 +8,8 @@ export const types = {
   UPDATE_IMAGE_COUNT_PER_ROW: 'assets/UPDATE_IMAGE_COUNT_PER_ROW',
   SET_LOADING_ASSETS: 'assets/SET_LOADING_ASSETS',
   SET_SF_MODAL_VISIBLE: 'assets/SET_SF_MODAL_VISIBLE',
+  SET_VIEWER_MODAL_VISIBLE: 'assets/SET_VIEWER_MODAL_VISIBLE',
+  SET_VIEWER_MODAL_STATE: 'assets/SET_VIEWER_MODAL_STATE',
 };
 
 export const actions = {
@@ -30,6 +32,14 @@ export const actions = {
     type: types.SET_SF_MODAL_VISIBLE,
     isSFModalVisible,
   }),
+  setViewerModalVisible: isViewerModalVisible => ({
+    type: types.SET_VIEWER_MODAL_VISIBLE,
+    isViewerModalVisible,
+  }),
+  setViewerModalState: viewerModalState => ({
+    type: types.SET_VIEWER_MODAL_STATE,
+    viewerModalState,
+  }),
 };
 
 const initialState = {
@@ -38,6 +48,8 @@ const initialState = {
   imageCountPerRow: 3,
   isLoading: false,
   isSFModalVisible: false,
+  isViewerModalVisible: false,
+  viewerModalState: null,
 };
 
 const assetsReducer = createReducer(initialState, {
@@ -58,6 +70,10 @@ const assetsReducer = createReducer(initialState, {
     (state.isLoading = action.isLoading),
   [types.SET_SF_MODAL_VISIBLE]: (state, action) =>
     (state.isSFModalVisible = action.isSFModalVisible),
+  [types.SET_VIEWER_MODAL_VISIBLE]: (state, action) =>
+    (state.isViewerModalVisible = action.isViewerModalVisible),
+  [types.SET_VIEWER_MODAL_STATE]: (state, action) =>
+    (state.viewerModalState = action.viewerModalState),
 });
 
 export default assetsReducer;

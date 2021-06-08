@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, AppState } from 'react-native';
+import { StyleSheet, AppState, SafeAreaView } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { actions } from '../redux/states/assetsState';
 import { ImageGridList, SortAndFilterModal } from '../components';
-import { SafeAreaView } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();

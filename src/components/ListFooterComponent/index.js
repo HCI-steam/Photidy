@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   footerText: {
     marginTop: 16,
     marginBottom: 16,
+    color: 'rgb(142, 142, 147)',
   },
 });
 

@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { AppState, Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import {
   HomeScreen,
-  PhotoViewScreen,
   AlbumsScreen,
   AlbumScreen,
   SettingsScreen,
@@ -28,6 +30,7 @@ import { getAppIsLoaded, getSFModalVisible } from './src/redux/selectors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const SharedStack = createSharedElementStackNavigator();
 
 function HomeStack() {
   const modalVisible = useSelector(state => getSFModalVisible(state));
@@ -45,11 +48,6 @@ function HomeStack() {
           headerLeft: props => <MainTopLeftMenu {...props} />,
           headerRight: props => <MainTopRightMenu {...props} />,
         }}
-      />
-      <Stack.Screen
-        name="PhotoView"
-        component={PhotoViewScreen}
-        options={{ title: '' }}
       />
     </Stack.Navigator>
   );
@@ -92,7 +90,7 @@ function AlbumStack() {
 function AppWrapper() {
   return (
     <Provider store={store}>
-      <StatusBar style="auto" />
+      <StatusBar barStyle="light-content" animated />
       <App />
     </Provider>
   );
@@ -127,12 +125,12 @@ function App() {
         <Tab.Screen
           name="HomeStack"
           component={HomeStack}
-          options={{
+          options={navigation => ({
             tabBarLabel: '보관함',
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="photo-library" color={color} size={size} />
             ),
-          }}
+          })}
         />
         <Tab.Screen
           name="AlbumStack"

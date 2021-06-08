@@ -11,7 +11,7 @@ import { getSFModalVisible } from '../../redux/selectors';
 import { actions } from '../../redux/states/assetsState';
 import SortAndFilterModalContent from '../SortAndFilterModalContent';
 
-const SortAndFilterModal = props => {
+const SortAndFilterModal = () => {
   const dispatch = useDispatch();
   const modalVisible = useSelector(state => getSFModalVisible(state));
 
@@ -44,7 +44,7 @@ const SortAndFilterModal = props => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         backdropComponent={BottomSheetBackdrop}
-        handleComponent={null}
+        // handleComponent={null}
       >
         <SortAndFilterModalContent />
       </BottomSheetModal>
