@@ -7,7 +7,6 @@ import { actions } from '../../redux/states/assetsState';
 import { getImageCountPerRow } from '../../redux/selectors';
 
 const MainTopLeftMenu = props => {
-  //   console.log(props);
   const dispatch = useDispatch();
 
   const [imageCountPerRow] = useSelector(
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 16,
+    marginLeft: 12,
   },
   icon: {
     fontSize: 24,

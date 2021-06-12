@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import {
   NavigationContainer,
@@ -9,9 +9,9 @@ import {
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   HomeScreen,
@@ -30,7 +30,6 @@ import { getAppIsLoaded, getSFModalVisible } from './src/redux/selectors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const SharedStack = createSharedElementStackNavigator();
 
 function HomeStack() {
   const modalVisible = useSelector(state => getSFModalVisible(state));
@@ -90,7 +89,7 @@ function AlbumStack() {
 function AppWrapper() {
   return (
     <Provider store={store}>
-      <StatusBar barStyle="light-content" animated />
+      <StatusBar style="dark" />
       <App />
     </Provider>
   );
@@ -109,6 +108,18 @@ function App() {
     }
     dispatch(appActions.setAppIsLoaded(true));
   }, [dispatch]);
+
+  useEffect(() => {
+    const setTagStorage = async () => {
+      const idToTags = await AsyncStorage.getItem('idToTags');
+      if (!idToTags) await AsyncStorage.setItem('idToTags', JSON.stringify({}));
+
+      const tagToIds = await AsyncStorage.getItem('tagToIds');
+      if (!tagToIds) await AsyncStorage.setItem('tagToIds', JSON.stringify({}));
+    };
+
+    setTagStorage();
+  }, []);
 
   return (
     <NavigationContainer>

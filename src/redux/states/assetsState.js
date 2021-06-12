@@ -1,6 +1,6 @@
 import _ from 'loadsh';
 
-import { createReducer, mergeReducers } from '../common';
+import { createReducer } from '../common';
 
 export const types = {
   REQUEST_ALL_ASSETS: 'assets/REQUEST_ALL_ASSETS',
@@ -8,8 +8,6 @@ export const types = {
   UPDATE_IMAGE_COUNT_PER_ROW: 'assets/UPDATE_IMAGE_COUNT_PER_ROW',
   SET_LOADING_ASSETS: 'assets/SET_LOADING_ASSETS',
   SET_SF_MODAL_VISIBLE: 'assets/SET_SF_MODAL_VISIBLE',
-  SET_VIEWER_MODAL_VISIBLE: 'assets/SET_VIEWER_MODAL_VISIBLE',
-  SET_VIEWER_MODAL_STATE: 'assets/SET_VIEWER_MODAL_STATE',
 };
 
 export const actions = {
@@ -31,14 +29,6 @@ export const actions = {
   setSFModalVisible: isSFModalVisible => ({
     type: types.SET_SF_MODAL_VISIBLE,
     isSFModalVisible,
-  }),
-  setViewerModalVisible: isViewerModalVisible => ({
-    type: types.SET_VIEWER_MODAL_VISIBLE,
-    isViewerModalVisible,
-  }),
-  setViewerModalState: viewerModalState => ({
-    type: types.SET_VIEWER_MODAL_STATE,
-    viewerModalState,
   }),
 };
 
@@ -70,10 +60,6 @@ const assetsReducer = createReducer(initialState, {
     (state.isLoading = action.isLoading),
   [types.SET_SF_MODAL_VISIBLE]: (state, action) =>
     (state.isSFModalVisible = action.isSFModalVisible),
-  [types.SET_VIEWER_MODAL_VISIBLE]: (state, action) =>
-    (state.isViewerModalVisible = action.isViewerModalVisible),
-  [types.SET_VIEWER_MODAL_STATE]: (state, action) =>
-    (state.viewerModalState = action.viewerModalState),
 });
 
 export default assetsReducer;

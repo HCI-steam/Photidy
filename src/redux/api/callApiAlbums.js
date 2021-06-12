@@ -9,7 +9,8 @@ export const callApiAlbums = async () => {
     let result = await Promise.all(
       albums.map(async album => {
         if (album.assetCount > 0) {
-          let media = await MediaLibrary.getAssetsAsync(album.id, {
+          let media = await MediaLibrary.getAssetsAsync({
+            album: album.id,
             first: 1,
           });
           return { ...album, thumbnail: media.assets[0] };

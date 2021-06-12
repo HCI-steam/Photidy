@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import _ from 'loadsh';
 
 const ListFooterComponent = ({ assets }) => {
-  const countsByMediaType = _.countBy(assets, asset => asset.mediaType);
+  const countsByMediaType = _.countBy(assets, asset => asset?.mediaType);
 
   let listFooterText = '';
   if (!countsByMediaType['photo']) {
@@ -22,7 +22,8 @@ const ListFooterComponent = ({ assets }) => {
     ).toLocaleString()}개의 비디오`;
   }
 
-  return !countsByMediaType['photo'] && !countsByMediaType['video'] ? null : (
+  return !assets ||
+    (!countsByMediaType['photo'] && !countsByMediaType['video']) ? null : (
     <View style={styles.footerContainer}>
       <Text style={styles.footerText}>{listFooterText}</Text>
     </View>

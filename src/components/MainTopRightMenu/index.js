@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { actions } from '../../redux/states/assetsState';
-import { Button } from 'react-native';
 
 const MainTopRightMenu = props => {
   const dispatch = useDispatch();
@@ -20,18 +19,13 @@ const MainTopRightMenu = props => {
         {/* <Ionicons name="ios-filter" style={styles.icon} /> */}
         <MaterialCommunityIcons name="filter-menu" style={styles.icon} />
       </TouchableOpacity>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         onPress={() => {
           console.log('pressed');
         }}
       >
         <Text style={styles.text}>선택</Text>
-      </TouchableOpacity> */}
-      <Button
-        style={styles.text}
-        onPress={() => console.log('pressed')}
-        title="선택"
-      />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -42,18 +36,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: 12,
+    marginRight: 12,
   },
   icon: {
     fontSize: 24,
     color: 'rgb(0, 122, 255)',
-    paddingRight: 8,
+    marginRight: 8,
   },
   text: {
-    fontSize: 16,
+    fontSize: 18,
     color: 'rgb(0, 122, 255)',
-    paddingLeft: 8,
-    paddingRight: 0,
+    marginLeft: 12,
   },
 });
 

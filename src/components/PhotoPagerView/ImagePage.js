@@ -1,33 +1,69 @@
-/** NOT USED CURRENTLY */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Image } from 'react-native';
-import { SharedElement } from 'react-native-shared-element';
-import * as MediaLibrary from 'expo-media-library';
-import * as FileSystem from 'expo-file-system';
+import { Video, Audio } from 'expo-av';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+
+import { getViewerModalState } from '../../redux/selectors';
+import { actions } from '../../redux/states/viewerState';
 
 const ImagePage = props => {
-  console.log(props);
+  const dispatch = useDispatch();
   const { index, item, width, height } = props;
-  const [image, setImage] = useState(item);
+  const videoRef = useRef(null);
+  const isVideo = item.mediaType === 'video';
 
-  console.log(width, height);
+  const viewerStatus = useSelector(
+    state => getViewerModalState(state),
+    shallowEqual
+  );
+
   useEffect(() => {
-    extendAssetInfo = async () => {
-      let extended = await MediaLibrary.getAssetInfoAsync(image.id);
-      let { exists, size } = await FileSystem.getInfoAsync(extended.localUri);
-
-      if (exists) extended = { ...extended, size };
-
-      setImage(extended);
+    const setAudioOptions = async () => {
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+      });
     };
 
-    extendAssetInfo();
+    setAudioOptions();
   }, []);
 
-  return (
-    <SharedElement id={`main-screen-photo-${image.id}`}>
-      <Image style={{ width, height }} source={{ uri: image.uri }} />
-    </SharedElement>
+  useEffect(() => {
+    if (!isVideo) {
+      dispatch(actions.setVideoPlayback(null));
+    }
+  }, [dispatch]);
+
+  const handlePlaybackUpdate = useCallback(
+    playbackStatus => {
+      dispatch(
+        actions.setVideoPlayback({
+          playbackObject: videoRef.current,
+          playbackStatus,
+        })
+      );
+      if (
+        playbackStatus.didJustFinish &&
+        playbackStatus.positionMillis === playbackStatus.durationMillis
+      ) {
+        videoRef.current.loadAsync(item);
+      }
+    },
+    [videoRef.current, dispatch]
+  );
+
+  return item.mediaType === 'video' ? (
+    <Video
+      ref={videoRef}
+      style={{ width, height }}
+      shouldPlay={viewerStatus.index === index}
+      resizeMode="cover"
+      source={{ uri: item.uri }}
+      volume={1}
+      isMuted={false}
+      onPlaybackStatusUpdate={handlePlaybackUpdate}
+    />
+  ) : (
+    <Image style={{ width, height }} source={{ uri: item.uri }} />
   );
 };
 

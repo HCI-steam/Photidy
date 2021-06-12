@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Image } from 'react-native';
-import { SharedElement } from 'react-native-shared-element';
 import { connect } from 'react-redux';
 
 /**
@@ -13,19 +12,19 @@ const mapDispatchToProps = dispatch => {
   return {
     setViewerModalOn: () =>
       dispatch({
-        type: 'assets/SET_VIEWER_MODAL_VISIBLE',
+        type: 'viewer/SET_VIEWER_MODAL_VISIBLE',
         isViewerModalVisible: true,
       }),
-    setViewerModalState: index =>
+    setViewerModalState: (index, item) =>
       dispatch({
-        type: 'assets/SET_VIEWER_MODAL_STATE',
-        viewerModalState: { index },
+        type: 'viewer/SET_VIEWER_MODAL_STATE',
+        viewerModalState: { index, item },
       }),
   };
 };
 
 const mapStateToProps = state => {
-  const { isViewerModalVisible, viewerModalState } = state.assets;
+  const { isViewerModalVisible, viewerModalState } = state.viewer;
   return { isViewerModalVisible, viewerModalState };
 };
 
@@ -35,9 +34,9 @@ class ImageListItem extends React.PureComponent {
   }
 
   _handleOnPress = () => {
-    const { setViewerModalOn, setViewerModalState, index } = this.props;
+    const { setViewerModalOn, setViewerModalState, index, items } = this.props;
     if (setViewerModalOn) setViewerModalOn();
-    if (setViewerModalState) setViewerModalState(index);
+    if (setViewerModalState) setViewerModalState(index, items[index]);
   };
 
   render() {
@@ -45,18 +44,18 @@ class ImageListItem extends React.PureComponent {
     const item = items[index];
     return (
       <TouchableOpacity onPress={this._handleOnPress}>
-        <SharedElement id={`main-screen-photo-${item.id}`}>
-          <Image
-            style={{
-              width: imageGridSize,
-              height: imageGridSize,
-              marginRight: 1,
-              marginTop: 1,
-              resizeMode: 'cover',
-            }}
-            source={{ uri: item.uri }}
-          />
-        </SharedElement>
+        {/* <SharedElement id={`main-screen-photo-${item.id}`}> */}
+        <Image
+          style={{
+            width: imageGridSize,
+            height: imageGridSize,
+            marginRight: 1,
+            marginTop: 1,
+            resizeMode: 'cover',
+          }}
+          source={{ uri: item.uri }}
+        />
+        {/* </SharedElement> */}
       </TouchableOpacity>
     );
   }

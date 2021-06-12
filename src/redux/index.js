@@ -1,13 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-// import { mergeReducers } from './common';
 import rootSaga from './sagas';
 import {
   assetsReducer,
   permissionsReducer,
   albumsReducer,
   appReducer,
+  viewerReducer,
 } from './states';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -17,6 +17,7 @@ const reducer = combineReducers({
   albums: albumsReducer,
   permissions: permissionsReducer,
   app: appReducer,
+  viewer: viewerReducer,
 });
 
 const store = createStore(reducer, applyMiddleware(sagaMiddleware));
