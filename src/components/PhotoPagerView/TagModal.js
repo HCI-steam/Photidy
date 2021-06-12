@@ -22,24 +22,35 @@ const TagModal = props => {
     shallowEqual
   );
   const [tagText, setTagText] = useState('');
-  const [itemTags, setItemTags] = useState([]);
   const tagInputRef = useRef(null);
 
-  const { item } = viewerState;
+  const { item, itemTags } = viewerState;
 
   const handleClose = useCallback(() => {
     dispatch(actions.setTagModalVisible(false));
+    setTagText('');
+    tagInputRef.current.clear();
   }, [dispatch]);
 
-  const getTagsForItem = useCallback(async () => {
+  const getTagsForItem = async () => {
     const idToTags = await AsyncStorage.getItem('idToTags');
     const parsed = JSON.parse(idToTags);
     if (parsed[item.id]) {
-      setItemTags(parsed[item.id]);
+      dispatch(
+        actions.setViewerModalState({
+          ...viewerState,
+          itemTags: parsed[item.id],
+        })
+      );
     } else {
-      setItemTags([]);
+      dispatch(
+        actions.setViewerModalState({
+          ...viewerState,
+          itemTags: [],
+        })
+      );
     }
-  }, [item]);
+  };
 
   const handleRegister = useCallback(async () => {
     const idToTags = JSON.parse(await AsyncStorage.getItem('idToTags'));
@@ -63,6 +74,7 @@ const TagModal = props => {
       );
       getTagsForItem();
     }
+    setTagText('');
     tagInputRef.current.clear();
   }, [tagText, item]);
 

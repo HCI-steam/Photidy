@@ -11,14 +11,14 @@ import { Slider } from '@miblanchard/react-native-slider';
 
 import { actions as viewerActions } from '../../redux/states/viewerState';
 import { actions as assetsActions } from '../../redux/states/assetsState';
-import { getVideoPlayback } from '../../redux/selectors';
+import { getVideoPlayback, getViewerModalState } from '../../redux/selectors';
 
 const PhotoViewFooter = props => {
   const { currentIndex, currentItem, items } = props;
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
-  const videoPlayback = useSelector(
-    state => getVideoPlayback(state),
+  const [videoPlayback, viewerState] = useSelector(
+    state => [getVideoPlayback(state), getViewerModalState(state)],
     shallowEqual
   );
   //   const { playbackObject, playbackStatus } = videoPlayback;
@@ -76,9 +76,29 @@ const PhotoViewFooter = props => {
     }
   }, [items, currentIndex, dispatch]);
 
-  const handleTagMenu = useCallback(() => {
+  /* This part is duplicated and hard-coded, if I want to do it more properly, Have to fix it later. */
+  const handleTagMenu = useCallback(async () => {
+    const idToTags = await AsyncStorage.getItem('idToTags');
+    const parsed = JSON.parse(idToTags);
+    if (parsed[currentItem.id]) {
+      dispatch(
+        viewerActions.setViewerModalState({
+          index: currentIndex,
+          item: currentItem,
+          itemTags: parsed[currentItem.id],
+        })
+      );
+    } else {
+      dispatch(
+        viewerActions.setViewerModalState({
+          index: currentIndex,
+          item: currentItem,
+          itemTags: [],
+        })
+      );
+    }
     dispatch(viewerActions.setTagModalVisible(true));
-  }, [dispatch]);
+  }, [dispatch, currentIndex, currentItem]);
 
   const handleSaveToAlbumMenu = useCallback(() => {
     dispatch(viewerActions.setSaveToAlbumModalVisible(true));
