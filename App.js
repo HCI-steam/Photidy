@@ -26,13 +26,26 @@ import { actions as permissionActions } from './src/redux/states/permissionsStat
 import { actions as appActions } from './src/redux/states/appState';
 import { actions as assetsActions } from './src/redux/states/assetsState';
 import { actions as albumsActions } from './src/redux/states/albumsState';
-import { getAppIsLoaded, getSFModalVisible } from './src/redux/selectors';
+import {
+  getAppIsLoaded,
+  getSFModalVisible,
+  getSelectionMode,
+} from './src/redux/selectors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeStack() {
-  const modalVisible = useSelector(state => getSFModalVisible(state));
+  const [modalVisible, selectionMode] = useSelector(state => [
+    getSFModalVisible(state),
+    getSelectionMode(state),
+  ]);
+
+  const headerShown = modalVisible
+    ? false
+    : selectionMode !== 'NONE'
+    ? false
+    : true;
 
   return (
     <Stack.Navigator initialRouteName="Home" headerMode="float">
@@ -40,7 +53,7 @@ function HomeStack() {
         name="Home"
         component={HomeScreen}
         options={{
-          headerShown: !modalVisible,
+          headerShown,
           headerStyleInterpolator: HeaderStyleInterpolators.forFade,
           title: '보관함',
           headerTitleAlign: 'center',
@@ -89,7 +102,6 @@ function AlbumStack() {
 function AppWrapper() {
   return (
     <Provider store={store}>
-      <StatusBar style="dark" />
       <App />
     </Provider>
   );
@@ -97,8 +109,11 @@ function AppWrapper() {
 
 function App() {
   const dispatch = useDispatch();
-  const appIsLoaded = useSelector(state => getAppIsLoaded(state));
-  console.log(appIsLoaded);
+  const [appIsLoaded, selectionMode] = useSelector(state => [
+    getAppIsLoaded(state),
+    getSelectionMode(state),
+  ]);
+  // console.log(appIsLoaded);
 
   useEffect(() => {
     if (!appIsLoaded) {
@@ -141,6 +156,7 @@ function App() {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="photo-library" color={color} size={size} />
             ),
+            tabBarVisible: selectionMode === 'NONE',
           })}
         />
         <Tab.Screen

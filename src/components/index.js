@@ -4,3 +4,6 @@ export { default as SortAndFilterModal } from './SortAndFilterModal';
 export { default as ImageGridList } from './ImageGridList';
 export { default as ImageListItem } from './ImageListItem';
 export { default as PhotoPagerView } from './PhotoPagerView';
+export { default as SelectionModeHeader } from './SelectionModeHeader';
+export { default as SelectionModeFooter } from './SelectionModeFooter';
+export { default as SaveToAlbumModal } from './SaveToAlbumModal';

@@ -14,29 +14,42 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import * as MediaLibrary from 'expo-media-library';
+import { Ionicons } from '@expo/vector-icons';
 
 import { actions as viewerActions } from '../../redux/states/viewerState';
 import { actions as albumsActions } from '../../redux/states/albumsState';
+import { actions as assetsActions } from '../../redux/states/assetsState';
 import {
   getAllAlbums,
   getSaveToAlbumModalVisible,
   getViewerModalState,
+  getSelectedAssets,
+  getSelectionMode,
 } from '../../redux/selectors';
+import { SafeAreaView } from 'react-native';
 
 const SaveToAlbumModal = props => {
   const dispatch = useDispatch();
-  const [saveToAlbumModalVisible, viewerState, albums] = useSelector(
+  const [
+    saveToAlbumModalVisible,
+    viewerState,
+    albums,
+    selectionMode,
+    selectedAssets,
+  ] = useSelector(
     state => [
       getSaveToAlbumModalVisible(state),
       getViewerModalState(state),
       getAllAlbums(state),
+      getSelectionMode(state),
+      getSelectedAssets(state),
     ],
     shallowEqual
   );
-  const { item } = viewerState;
+  const item = viewerState ? viewerState.item : {};
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['50%', '93%'], []);
+  const snapPoints = useMemo(() => ['50%', '90%'], []);
 
   useEffect(() => {
     if (saveToAlbumModalVisible) {
@@ -62,7 +75,14 @@ const SaveToAlbumModal = props => {
   const handleSaveToAlbum = useCallback(
     albumId => async () => {
       try {
-        await MediaLibrary.addAssetsToAlbumAsync([item], albumId);
+        if (selectionMode !== 'NONE' && selectedAssets.length > 0) {
+          await MediaLibrary.addAssetsToAlbumAsync(selectedAssets, albumId);
+          dispatch(assetsActions.setSelectedAssets([]));
+          if (selectionMode === 'RANGE')
+            dispatch(assetsActions.setRangeStartIndex(-1));
+        } else {
+          await MediaLibrary.addAssetsToAlbumAsync([item], albumId);
+        }
         dispatch(viewerActions.setSaveToAlbumModalVisible(false));
         dispatch(albumsActions.requestAllAlbums());
       } catch (e) {
@@ -71,13 +91,15 @@ const SaveToAlbumModal = props => {
         );
       }
     },
-    [item, dispatch]
+    [item, dispatch, selectedAssets, selectionMode]
   );
 
   return (
+    // <SafeAreaView style={{ flex: 1 }}>
     <BottomSheetModalProvider>
       <BottomSheetModal
         ref={bottomSheetModalRef}
+        // style={{ flex: 1, marginBottom: 36 }}
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
@@ -99,10 +121,17 @@ const SaveToAlbumModal = props => {
                 activeOpacity={0.5}
                 onPress={handleSaveToAlbum(album.id)}
               >
-                <Image
-                  style={styles.listItemImage}
-                  source={{ uri: album.thumbnail.uri }}
-                />
+                {album.thumbnail ? (
+                  <Image
+                    style={styles.listItemImage}
+                    source={{ uri: album.thumbnail.uri }}
+                  />
+                ) : (
+                  <Ionicons
+                    name="ios-images-outline"
+                    style={styles.fallbackIcon}
+                  />
+                )}
                 <View style={styles.listItemTextWrapper}>
                   <Text style={styles.listItemTitle}>{album.title}</Text>
                   <Text style={styles.listItemCount}>
@@ -172,6 +201,15 @@ const styles = StyleSheet.create({
   listItemCount: {
     fontSize: 12,
     color: 'grey',
+  },
+  fallbackIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 6,
+    borderColor: 'grey',
+    color: 'grey',
+    textAlign: 'center',
+    fontSize: 54,
   },
 });
 

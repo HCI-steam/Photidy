@@ -8,7 +8,18 @@ export const types = {
   UPDATE_IMAGE_COUNT_PER_ROW: 'assets/UPDATE_IMAGE_COUNT_PER_ROW',
   SET_LOADING_ASSETS: 'assets/SET_LOADING_ASSETS',
   SET_SF_MODAL_VISIBLE: 'assets/SET_SF_MODAL_VISIBLE',
+  SET_SELECTION_MODE: 'assets/SET_SELECTION_MODE',
+  SELECT_ASSET: 'assets/SELECT_ASSET',
+  UNSELECT_ASSET: 'assets/UNSELECT_ASSET',
+  SET_SELECTED_ASSETS: 'assets/SET_SELECTED_ASSETS',
+  SET_RANGE_START_INDEX: 'assets/SET_RANGE_START_INDEX',
 };
+
+const SelectionMode = Object.freeze({
+  NONE: 'NONE',
+  SINGLE: 'SINGLE',
+  RANGE: 'RANGE',
+});
 
 export const actions = {
   requestAllAssets: () => ({
@@ -30,6 +41,26 @@ export const actions = {
     type: types.SET_SF_MODAL_VISIBLE,
     isSFModalVisible,
   }),
+  setSelectionMode: selectionMode => ({
+    type: types.SET_SELECTION_MODE,
+    selectionMode,
+  }),
+  selectAsset: selectedAsset => ({
+    type: types.SELECT_ASSET,
+    selectedAsset,
+  }),
+  unselectAsset: unselectedAsset => ({
+    type: types.UNSELECT_ASSET,
+    unselectedAsset,
+  }),
+  setSelectedAssets: selectedArray => ({
+    type: types.SET_SELECTED_ASSETS,
+    selectedArray,
+  }),
+  setRangeStartIndex: rangeStartIndex => ({
+    type: types.SET_RANGE_START_INDEX,
+    rangeStartIndex,
+  }),
 };
 
 const initialState = {
@@ -40,6 +71,9 @@ const initialState = {
   isSFModalVisible: false,
   isViewerModalVisible: false,
   viewerModalState: null,
+  selectionMode: SelectionMode.NONE,
+  selectedAssets: [],
+  rangeStartIndex: -1,
 };
 
 const assetsReducer = createReducer(initialState, {
@@ -60,6 +94,20 @@ const assetsReducer = createReducer(initialState, {
     (state.isLoading = action.isLoading),
   [types.SET_SF_MODAL_VISIBLE]: (state, action) =>
     (state.isSFModalVisible = action.isSFModalVisible),
+  [types.SET_SELECTION_MODE]: (state, action) =>
+    (state.selectionMode = action.selectionMode),
+  [types.SELECT_ASSET]: (state, action) => {
+    state.selectedAssets.push(action.selectedAsset);
+  },
+  [types.UNSELECT_ASSET]: (state, action) => {
+    state.selectedAssets = state.selectedAssets.filter(
+      asset => action.unselectedAsset.id !== asset.id
+    );
+  },
+  [types.SET_SELECTED_ASSETS]: (state, action) =>
+    (state.selectedAssets = action.selectedArray),
+  [types.SET_RANGE_START_INDEX]: (state, action) =>
+    (state.rangeStartIndex = action.rangeStartIndex),
 });
 
 export default assetsReducer;

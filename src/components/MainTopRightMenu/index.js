@@ -13,17 +13,17 @@ const MainTopRightMenu = props => {
     console.log('modal open');
   }, [dispatch]);
 
+  const handleSelectionMode = useCallback(() => {
+    dispatch(actions.setSelectionMode('SINGLE'));
+  }, [dispatch]);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleOpenSFModal}>
         {/* <Ionicons name="ios-filter" style={styles.icon} /> */}
-        <MaterialCommunityIcons name="filter-menu" style={styles.icon} />
+        <Ionicons name="ios-options" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          console.log('pressed');
-        }}
-      >
+      <TouchableOpacity onPress={handleSelectionMode}>
         <Text style={styles.text}>선택</Text>
       </TouchableOpacity>
     </View>

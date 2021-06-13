@@ -11,7 +11,7 @@ import PhotoViewHeader from './PhotoViewHeader';
 import PhotoViewFooter from './PhotoViewFooter';
 import PhotoInfoModal from './PhotoInfoModal';
 import TagModal from './TagModal';
-import SaveToAlbumModal from './SaveToAlbumModal';
+import SaveToAlbumModal from '../SaveToAlbumModal';
 import {
   getViewerModalState,
   getViewerModalVisible,

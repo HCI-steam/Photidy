@@ -6,6 +6,9 @@ export const getAssetsLength = state => state.assets.assetsLength;
 export const getAssetsLoading = state => state.assets.isLoading;
 export const getImageCountPerRow = state => state.assets.imageCountPerRow;
 export const getSFModalVisible = state => state.assets.isSFModalVisible;
+export const getSelectionMode = state => state.assets.selectionMode;
+export const getSelectedAssets = state => state.assets.selectedAssets;
+export const getRangeStartIndex = state => state.assets.rangeStartIndex;
 
 /* Albums */
 export const getAllAlbums = state => state.albums.albums;

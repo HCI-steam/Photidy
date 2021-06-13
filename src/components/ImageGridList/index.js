@@ -1,40 +1,18 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, forwardRef, useImperativeHandle, useMemo } from 'react';
 import { SafeAreaView, FlatList, Dimensions } from 'react-native';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 
-import {
-  getAllAssets,
-  getAssetsLength,
-  getAssetsLoading,
-  getImageCountPerRow,
-  getAppIsLoaded,
-  getViewerModalVisible,
-} from '../../redux/selectors';
+import { actions } from '../../redux/states/assetsState';
 import ImageListItem from '../ImageListItem';
 import ListFooterComponent from '../ListFooterComponent';
 // import ListEmptyComponent from '../ListEmptyComponent';
 import PhotoPagerView from '../PhotoPagerView';
 
-const ImageGridList = ({ navigation }) => {
-  const [
-    assets,
-    assetsLength,
-    // isLoading,
-    imageCountPerRow,
-    // appIsLoaded,
-    viewerVisible,
-  ] = useSelector(
-    state => [
-      getAllAssets(state),
-      getAssetsLength(state),
-      // getAssetsLoading(state),
-      getImageCountPerRow(state),
-      // getAppIsLoaded(state),
-      getViewerModalVisible(state),
-    ],
-    shallowEqual
-  );
+function ImageGridList(props, ref) {
+  const { navigation, assets, assetsLength, imageCountPerRow, viewerVisible } =
+    props;
+  const dispatch = useDispatch();
 
   const screen = Dimensions.get('screen');
   const imageGridSize = screen.width / imageCountPerRow;
@@ -48,6 +26,12 @@ const ImageGridList = ({ navigation }) => {
     })
   );
 
+  useImperativeHandle(ref, () => ({
+    scrollToEnd: () => {
+      scrollRef.current.scrollToEnd();
+    },
+  }));
+
   const renderImageItem = props => <ImageListItem {...props} />;
   const renderItem = ({ item, index }) =>
     renderImageItem({ items: assets, index, imageGridSize, navigation });
@@ -58,6 +42,7 @@ const ImageGridList = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1 }}>
       {/* TODO: Filtering 기능 구현 뒤에 실제 결과없음에 대해 스크롤 관련 에러, 헤더 버튼 동작 처리하기 */}
       <FlatList
+        // id={'assetsList_' + imageCountPerRow}
         key={'assetsList_' + imageCountPerRow}
         data={assets}
         ref={scrollRef}
@@ -81,6 +66,8 @@ const ImageGridList = ({ navigation }) => {
       <PhotoPagerView items={assets} />
     </SafeAreaView>
   );
-};
+}
+
+ImageGridList = forwardRef(ImageGridList);
 
 export default ImageGridList;
