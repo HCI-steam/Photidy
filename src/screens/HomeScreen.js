@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation }) => {
             imageCountPerRow={imageCountPerRow}
             viewerVisible={viewerVisible}
           />
-          <SortAndFilterModal />
+          <SortAndFilterModal assets={assets} />
         </SafeAreaView>
       )}
     </React.Fragment>

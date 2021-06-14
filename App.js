@@ -26,6 +26,7 @@ import { actions as permissionActions } from './src/redux/states/permissionsStat
 import { actions as appActions } from './src/redux/states/appState';
 import { actions as assetsActions } from './src/redux/states/assetsState';
 import { actions as albumsActions } from './src/redux/states/albumsState';
+import { actions as tagsActions } from './src/redux/states/tagsState';
 import {
   getAppIsLoaded,
   getSFModalVisible,
@@ -109,10 +110,13 @@ function AppWrapper() {
 
 function App() {
   const dispatch = useDispatch();
-  const [appIsLoaded, selectionMode] = useSelector(state => [
-    getAppIsLoaded(state),
-    getSelectionMode(state),
-  ]);
+  const [appIsLoaded, selectionMode, filterModalVisible] = useSelector(
+    state => [
+      getAppIsLoaded(state),
+      getSelectionMode(state),
+      getSFModalVisible(state),
+    ]
+  );
   // console.log(appIsLoaded);
 
   useEffect(() => {
@@ -125,16 +129,14 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    const setTagStorage = async () => {
-      const idToTags = await AsyncStorage.getItem('idToTags');
-      if (!idToTags) await AsyncStorage.setItem('idToTags', JSON.stringify({}));
+    dispatch(tagsActions.requestTagStorage());
+  }, [dispatch]);
 
-      const tagToIds = await AsyncStorage.getItem('tagToIds');
-      if (!tagToIds) await AsyncStorage.setItem('tagToIds', JSON.stringify({}));
-    };
-
-    setTagStorage();
-  }, []);
+  const homeTabBarVisible = filterModalVisible
+    ? false
+    : selectionMode !== 'NONE'
+    ? false
+    : true;
 
   return (
     <NavigationContainer>
@@ -156,7 +158,7 @@ function App() {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="photo-library" color={color} size={size} />
             ),
-            tabBarVisible: selectionMode === 'NONE',
+            tabBarVisible: homeTabBarVisible,
           })}
         />
         <Tab.Screen

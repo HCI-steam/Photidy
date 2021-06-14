@@ -25,3 +25,8 @@ export const getTagModalVisible = state => state.viewer.isTagModalVisible;
 export const getSaveToAlbumModalVisible = state =>
   state.viewer.isSaveToAlbumModalVisible;
 export const getVideoPlayback = state => state.viewer.videoPlayback;
+
+/* Tags */
+
+export const getTagToIds = state => state.tags.tagToIds;
+export const getIdToTags = state => state.tags.idToTags;

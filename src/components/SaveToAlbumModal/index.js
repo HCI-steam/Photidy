@@ -49,7 +49,7 @@ const SaveToAlbumModal = props => {
   const item = viewerState ? viewerState.item : {};
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ['50%', '90%'], []);
+  const snapPoints = useMemo(() => ['50%', '92%'], []);
 
   useEffect(() => {
     if (saveToAlbumModalVisible) {
@@ -95,11 +95,9 @@ const SaveToAlbumModal = props => {
   );
 
   return (
-    // <SafeAreaView style={{ flex: 1 }}>
     <BottomSheetModalProvider>
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        // style={{ flex: 1, marginBottom: 36 }}
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
