@@ -10,8 +10,6 @@ import {
 } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   HomeScreen,
@@ -20,7 +18,12 @@ import {
   SettingsScreen,
   ProfileScreen,
 } from './src/screens';
-import { MainTopLeftMenu, MainTopRightMenu } from './src/components';
+import {
+  MainTopLeftMenu,
+  MainTopRightMenu,
+  AlbumsTopRightMenu,
+  AlbumsTopLeftMenu,
+} from './src/components';
 import store from './src/redux';
 import { actions as permissionActions } from './src/redux/states/permissionsState';
 import { actions as appActions } from './src/redux/states/appState';
@@ -89,7 +92,11 @@ function AlbumStack() {
       <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
-        options={{ title: '앨범' }}
+        options={{
+          title: '앨범',
+          headerLeft: props => <AlbumsTopLeftMenu {...props} />,
+          headerRight: props => <AlbumsTopRightMenu {...props} />,
+        }}
       />
       <Stack.Screen
         name="Album"

@@ -9,6 +9,7 @@ import {
   appReducer,
   viewerReducer,
   tagsReducer,
+  albumReducer,
 } from './states';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   app: appReducer,
   viewer: viewerReducer,
   tags: tagsReducer,
+  album: albumReducer,
 });
 
 const store = createStore(reducer, applyMiddleware(sagaMiddleware));

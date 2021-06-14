@@ -4,6 +4,7 @@ import { watchFetchingAssets } from './assetsSaga';
 import { watchFetchingPermissions } from './permissionsSaga';
 import { watchFetchingAlbums } from './albumsSaga';
 import { watchFetchingTags } from './tagsSaga';
+import { watchFetchingAlbumAssets } from './albumSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -11,5 +12,6 @@ export default function* rootSaga() {
     watchFetchingPermissions(),
     watchFetchingAlbums(),
     watchFetchingTags(),
+    watchFetchingAlbumAssets(),
   ]);
 }

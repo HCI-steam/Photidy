@@ -13,6 +13,12 @@ export const getRangeStartIndex = state => state.assets.rangeStartIndex;
 /* Albums */
 export const getAllAlbums = state => state.albums.albums;
 export const getAlbumsLoading = state => state.albums.isLoading;
+export const getAlbumIsEditing = state => state.albums.isEditMode;
+export const getAlbumIsCreating = state => state.albums.isCreating;
+export const getAlbumSortOption = state => state.albums.sortOption;
+
+/* Album */
+export const getAlbumAssets = state => state.album.albumAssets;
 
 /* App */
 export const getAppIsLoaded = state => state.app.appIsLoaded;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, AppState, SafeAreaView, View } from 'react-native';
+import { AppState, SafeAreaView, View } from 'react-native';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 
@@ -11,6 +11,8 @@ import {
   getImageCountPerRow,
   getAppIsLoaded,
   getViewerModalVisible,
+  getSelectionMode,
+  getSaveToAlbumModalVisible,
 } from '../redux/selectors';
 import {
   ImageGridList,
@@ -19,10 +21,6 @@ import {
   SelectionModeFooter,
   SaveToAlbumModal,
 } from '../components';
-import {
-  getSelectionMode,
-  getSaveToAlbumModalVisible,
-} from '../redux/selectors';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -114,5 +112,4 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({});
 export default HomeScreen;
