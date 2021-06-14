@@ -34,7 +34,13 @@ function ImageGridList(props, ref) {
 
   const renderImageItem = props => <ImageListItem {...props} />;
   const renderItem = ({ item, index }) =>
-    renderImageItem({ items: assets, index, imageGridSize, navigation });
+    renderImageItem({
+      items: assets,
+      index,
+      imageGridSize,
+      imageCountPerRow,
+      navigation,
+    });
 
   const memoizedRenderItem = useMemo(() => renderItem, [assets, imageGridSize]);
 

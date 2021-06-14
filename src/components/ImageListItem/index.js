@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity, Image, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
@@ -108,6 +108,34 @@ class ImageListItem extends React.PureComponent {
     }
   };
 
+  _convertSecToSecString = ms => {
+    const sec = Math.floor(ms % 60);
+    const min = Math.floor((ms / 60) % 60);
+    const hour = Math.floor((ms / 3600) % 24);
+
+    const zeroPadding = num => {
+      return num < 10 ? `0${num}` : num.toString();
+    };
+
+    const hourStr = zeroPadding(hour),
+      minStr = zeroPadding(min),
+      secStr = zeroPadding(sec);
+
+    return `${hourStr === '00' ? '' : `${hourStr}:`}${minStr}:${secStr}`;
+  };
+
+  _getMediaSubtypeText = item => {
+    if (item.mediaType === 'video') {
+      return this._convertSecToSecString(item.duration);
+    }
+    if (item.mediaSubtypes.includes('livePhoto')) return 'LIVE';
+    if (item.mediaSubtypes.includes('hdr')) return 'HDR';
+    if (item.mediaSubtypes.includes('depthEffect')) return 'DEPTH';
+    if (item.mediaSubtypes.includes('highFrameRate')) return 'SLOW';
+    if (item.mediaSubtypes.includes('timelapse')) return 'TIME';
+    return '';
+  };
+
   render() {
     const {
       navigation,
@@ -116,10 +144,13 @@ class ImageListItem extends React.PureComponent {
       selectionMode,
       items,
       index,
+      imageCountPerRow,
     } = this.props;
     const item = items[index];
     const selected =
       selectionMode !== 'NONE' && _.includes(selectedAssets, item);
+
+    const label = this._getMediaSubtypeText(items[index]);
 
     return (
       <TouchableOpacity
@@ -156,7 +187,30 @@ class ImageListItem extends React.PureComponent {
               color="rgb(0,122,255)"
             />
           </React.Fragment>
-        ) : null}
+        ) : label === '' ? null : (
+          <View
+            style={{
+              position: 'absolute',
+              top: 4,
+              left: 4,
+              zIndex: 5,
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              borderRadius: 4,
+              paddingHorizontal: 4,
+              paddingVertical: 3,
+            }}
+          >
+            <Text
+              style={{
+                color: '#fff',
+                fontWeight: '600',
+                fontSize: 13 - imageCountPerRow,
+              }}
+            >
+              {label}
+            </Text>
+          </View>
+        )}
         <Image
           style={{
             marginRight: 1,
