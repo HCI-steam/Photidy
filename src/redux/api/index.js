@@ -2,7 +2,7 @@ import { callApiAssets } from './callApiAssets';
 import { callApiPermissions } from './callApiPermissions';
 import { callApiAlbums } from './callApiAlbums';
 import { callApiGetTags } from './callApiGetTags';
-import { callApiSetTags } from './callApiSetTags';
+import { callApiSaveTags } from './callApiSaveTags';
 import { callApiAlbum } from './callApiAlbum';
 
 export {
@@ -10,6 +10,6 @@ export {
   callApiPermissions,
   callApiAlbums,
   callApiGetTags,
-  callApiSetTags,
+  callApiSaveTags,
   callApiAlbum,
 };

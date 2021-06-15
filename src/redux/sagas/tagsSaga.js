@@ -1,12 +1,13 @@
 import { all, call, put, take, fork } from 'redux-saga/effects';
 
 import { actions, types } from '../states/tagsState';
-import { callApiGetTags, callApiSetTags } from '../api';
+import { callApiGetTags, callApiSaveTags } from '../api';
 
-export function* fetchingTagStorage(action) {
+export function* fetchingTagStorage() {
   while (true) {
     yield take(types.REQUEST_TAG_STORAGE);
     const { idToTags, tagToIds } = yield call(callApiGetTags);
+    // console.log('fetched : ', idToTags, tagToIds);
     if (!idToTags && !tagToIds) {
       yield put(actions.saveTagStorage({}, {}));
     }
@@ -15,14 +16,11 @@ export function* fetchingTagStorage(action) {
   }
 }
 
-export function* saveTagStorage(action) {
+export function* saveTagStorage() {
   while (true) {
-    yield take(types.SAVE_TAG_STORAGE);
-    if (action) {
-      yield call(callApiSetTags, [action.idToTags, action.tagToIds]);
-    } else {
-      yield call(callApiSetTags, [{}, {}]);
-    }
+    const { idToTags, tagToIds } = yield take(actions.saveTagStorage);
+    // console.log('saving : ', idToTags, tagToIds);
+    if (idToTags && tagToIds) yield call(callApiSaveTags, idToTags, tagToIds);
   }
 }
 
